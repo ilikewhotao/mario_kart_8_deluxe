@@ -42,31 +42,29 @@ const pageTitle = computed(() => {
 <template>
   <n-layout class="wrapper">
     <n-layout-header class="wrapper_header" bordered>
-      <n-p>🦑小白杯 - {{ pageTitle }}</n-p>
-      <n-button class="menu_btn" secondary @click="openMenu"> 🔍 </n-button>
-      <n-drawer
-        v-model:show="menuActive"
-        width="80%"
-        placement="left"
-        :auto-focus="false"
-      >
-        <n-drawer-content title="🚀 目录">
-          <n-menu
-            :options="menuOptions"
-            v-model:value="routerName"
-            @update:value="closeMenu"
-          />
-        </n-drawer-content>
-      </n-drawer>
+      <n-text class="header_menuLogo"> 🏁小白杯 - {{ pageTitle }} </n-text>
+      <n-button class="header_menuButton" secondary @click="openMenu">
+        🔍
+      </n-button>
     </n-layout-header>
-    <n-layout position="absolute" style="top: 64px; bottom: 64px" has-sider>
-      <n-layout-sider
-        class="wrapper_sider"
-        content-style="padding: 24px;"
-        :native-scrollbar="false"
-        bordered
-      >
+    <n-layout position="absolute" class="wrapper_main" has-sider>
+      <n-layout-sider class="wrapper_sider" :native-scrollbar="false" bordered>
         <n-menu :options="menuOptions" v-model:value="routerName" />
+        <n-drawer
+          v-model:show="menuActive"
+          width="80%"
+          placement="left"
+          content-class="sider_menuDrawer"
+          :auto-focus="false"
+        >
+          <n-drawer-content title="🚀 目录">
+            <n-menu
+              :options="menuOptions"
+              v-model:value="routerName"
+              @update:value="closeMenu"
+            />
+          </n-drawer-content>
+        </n-drawer>
       </n-layout-sider>
       <n-layout content-style="padding: 24px;" :native-scrollbar="false">
         <router-view></router-view>
@@ -83,37 +81,45 @@ const pageTitle = computed(() => {
   width: 100vw;
   height: 100vh;
 }
+
 .wrapper_header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 64px;
-  padding: 0 1.5rem;
+  padding: 0 24px;
 }
-.wrapper_header .n-p {
-  margin: 0;
-  font-size: 16px;
+.wrapper_main {
+  top: 64px !important;
+  bottom: 64px !important;
 }
+
 .wrapper_sider {
   display: none;
 }
+
+.sider_menuDrawer {
+  --n-body-padding: 0;
+}
+
 .wrapper_footer {
   height: 64px;
-  padding: 0 1rem;
+  padding: 0 24px;
   line-height: 64px;
 }
+
 @media screen and (min-width: 768px) {
   .wrapper_header {
-    padding: 0 2rem;
+    padding: 0 24px;
   }
-  .wrapper_header .n-p {
-    font-size: 18px;
+  .wrapper_header .header_menuLogo {
+    font-size: 16px;
+  }
+  .wrapper_header .header_menuButton {
+    display: none;
   }
   .wrapper_sider {
     display: block;
-  }
-  .menu_btn {
-    display: none;
   }
 }
 </style>
