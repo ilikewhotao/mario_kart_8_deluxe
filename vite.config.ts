@@ -23,5 +23,6 @@ export default defineConfig({
       ]
     }),
     Components({ resolvers: [NaiveUiResolver()] })
-  ]
+  ],
+  base: './'
 })
