@@ -1,7 +1,6 @@
-// 路由懒加载
-const HomeView = () => import('../views/HomeView.vue')
-const UserView = () => import('../views/UserView.vue')
-const OtherView = () => import('../views/OtherView.vue')
+import HomeView from '../views/HomeView.vue'
+import UserView from '../views/UserView.vue'
+import OtherView from '../views/OtherView.vue'
 
 const routes = [
   { path: '/', redirect: '/home' },
