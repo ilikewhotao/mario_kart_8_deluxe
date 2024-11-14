@@ -35,14 +35,14 @@ function closeMenu() {
 
 const pageTitle = computed(() => {
   const item = routes.find(item => item.name === routerName.value)
-  return item?.meta?.icon + '' + item?.meta?.title
+  return item?.meta?.icon + ' ' + item?.meta?.title
 })
 </script>
 
 <template>
   <n-layout class="wrapper">
     <n-layout-header class="wrapper_header" bordered>
-      <n-text class="header_menuLogo"> 🏁小白杯 - {{ pageTitle }} </n-text>
+      <n-text class="header_menuLogo"> 🏁 小白杯 - {{ pageTitle }} </n-text>
       <n-button class="header_menuButton" secondary @click="openMenu">
         🔍
       </n-button>
