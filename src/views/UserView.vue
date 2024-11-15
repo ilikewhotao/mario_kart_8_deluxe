@@ -32,6 +32,11 @@ getUser()
 
 <template>
   <n-space vertical>
+    <n-space align="center" class="user_length">
+      <n-h4>活动人数</n-h4>
+      <n-h1>{{ users.length || '--' }}</n-h1>
+    </n-space>
+
     <n-table :bordered="false">
       <thead>
         <tr>
@@ -63,6 +68,11 @@ getUser()
 <style>
 .user_sw {
   max-width: 60px !important;
+}
+
+.user_length .n-h1,
+.user_length .n-h4 {
+  margin: 0;
 }
 
 @media screen and (min-width: 768px) {
