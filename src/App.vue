@@ -6,7 +6,7 @@ import { useRouterStore } from './store'
 import { storeToRefs } from 'pinia'
 import routes from './router/routes'
 
-// routerStore
+// store
 const routerStore = useRouterStore()
 const { routerName } = storeToRefs(routerStore)
 

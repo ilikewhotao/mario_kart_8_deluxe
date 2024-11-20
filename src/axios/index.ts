@@ -16,4 +16,24 @@ async function getJson(url: string) {
     })
 }
 
-export { getJson }
+// 数据初始化
+async function initData() {
+  return await axios
+    .all([
+      getJson(
+        'https://ilikewhotao.github.io/data/mario_kart_8_deluxe/first/user.json?' +
+          new Date().getTime()
+      ),
+      getJson(
+        'https://ilikewhotao.github.io/data/mario_kart_8_deluxe/first/record.json?' +
+          new Date().getTime()
+      )
+    ])
+    .then(
+      axios.spread((userJson, recordJson) => {
+        return { userJson, recordJson }
+      })
+    )
+}
+
+export { getJson, initData }

@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { Record, User } from '..'
 
 // 路由
 export const useRouterStore = defineStore('router', () => {
@@ -12,13 +13,7 @@ export const useRouterStore = defineStore('router', () => {
   return { routerName, setRouterName }
 })
 
-// user
-type User = {
-  sw: string
-  username: string
-  nickname: string
-}
-
+// 用户
 export const useUserStore = defineStore('user', () => {
   const users = ref<User[]>([])
 
@@ -26,5 +21,21 @@ export const useUserStore = defineStore('user', () => {
     users.value = data
   }
 
-  return { users, setUsers }
+  function swToUsername(sw: string) {
+    return users.value.find(item => item.sw === sw)?.username
+  }
+  function swToNickname(sw: string) {
+    return users.value.find(item => item.sw === sw)?.nickname
+  }
+
+  return { users, setUsers, swToUsername, swToNickname }
+})
+
+// 记录
+export const useRecordStore = defineStore('record', () => {
+  const records = ref<Record[]>([])
+  function setRecords(data: Record[]) {
+    records.value = data
+  }
+  return { records, setRecords }
 })
