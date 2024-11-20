@@ -110,6 +110,7 @@ function createColumns({
                     NTag,
                     {
                       size: 'small',
+                      bordered: false,
                       type: showList(row.bonus).type
                     },
                     {
