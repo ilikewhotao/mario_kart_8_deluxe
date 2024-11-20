@@ -36,23 +36,16 @@ router.beforeEach(to => {
       ])
       .then(
         axios.spread((userJson, recordJson) => {
-          setTimeout(() => {
-            const userEmojis = ['👨‍🌾', '👩‍🌾', '👨‍🔧', '👩‍🔧', '👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓']
-
-            userStore.setUsers(
-              userJson.map((item: User) => {
-                const userEmoji =
-                  userEmojis[Math.floor(Math.random() * userEmojis.length)]
-                return {
-                  ...item,
-                  showname:
-                    item.username +
-                    (item.nickname ? userEmoji + item.nickname : '')
-                }
-              })
-            )
-            recordStore.setRecords(recordJson)
-          }, 2000)
+          userStore.setUsers(
+            userJson.map((item: User) => {
+              return {
+                ...item,
+                showname:
+                  item.username + (item.nickname ? '🆔' + item.nickname : '')
+              }
+            })
+          )
+          recordStore.setRecords(recordJson)
         })
       )
   }

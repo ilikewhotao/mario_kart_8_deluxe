@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, h, ref } from 'vue'
-import type { MenuOption } from 'naive-ui'
+import { zhCN, type MenuOption } from 'naive-ui'
 import { RouterLink } from 'vue-router'
 import { useRouterStore } from './store'
 import { storeToRefs } from 'pinia'
@@ -40,40 +40,46 @@ const pageTitle = computed(() => {
 </script>
 
 <template>
-  <n-layout class="wrapper">
-    <n-layout-header class="wrapper_header" bordered>
-      <n-text class="header_menuLogo"> 🏁 小白杯 - {{ pageTitle }} </n-text>
-      <n-button class="header_menuButton" secondary @click="openMenu">
-        🔍
-      </n-button>
-    </n-layout-header>
-    <n-layout position="absolute" class="wrapper_main" has-sider>
-      <n-layout-sider class="wrapper_sider" :native-scrollbar="false" bordered>
-        <n-menu :options="menuOptions" v-model:value="routerName" />
-        <n-drawer
-          v-model:show="menuActive"
-          width="80%"
-          placement="left"
-          content-class="sider_menuDrawer"
-          :auto-focus="false"
+  <n-config-provider :locale="zhCN">
+    <n-layout class="wrapper">
+      <n-layout-header class="wrapper_header" bordered>
+        <n-text class="header_menuLogo"> 🏁 小白杯 - {{ pageTitle }} </n-text>
+        <n-button class="header_menuButton" secondary @click="openMenu">
+          🔍
+        </n-button>
+      </n-layout-header>
+      <n-layout position="absolute" class="wrapper_main" has-sider>
+        <n-layout-sider
+          class="wrapper_sider"
+          :native-scrollbar="false"
+          bordered
         >
-          <n-drawer-content title="🚀 目录">
-            <n-menu
-              :options="menuOptions"
-              v-model:value="routerName"
-              @update:value="closeMenu"
-            />
-          </n-drawer-content>
-        </n-drawer>
-      </n-layout-sider>
-      <n-layout content-style="padding: 24px;" :native-scrollbar="false">
-        <router-view></router-view>
+          <n-menu :options="menuOptions" v-model:value="routerName" />
+          <n-drawer
+            v-model:show="menuActive"
+            width="80%"
+            placement="left"
+            content-class="sider_menuDrawer"
+            :auto-focus="false"
+          >
+            <n-drawer-content title="🚀 目录">
+              <n-menu
+                :options="menuOptions"
+                v-model:value="routerName"
+                @update:value="closeMenu"
+              />
+            </n-drawer-content>
+          </n-drawer>
+        </n-layout-sider>
+        <n-layout content-style="padding: 24px;" :native-scrollbar="false">
+          <router-view></router-view>
+        </n-layout>
       </n-layout>
+      <n-layout-footer class="wrapper_footer" position="absolute" bordered>
+        最终解释权归小白所有
+      </n-layout-footer>
     </n-layout>
-    <n-layout-footer class="wrapper_footer" position="absolute" bordered>
-      最终解释权归小白所有
-    </n-layout-footer>
-  </n-layout>
+  </n-config-provider>
 </template>
 
 <style>

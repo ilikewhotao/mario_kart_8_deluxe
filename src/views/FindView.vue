@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, h, ref } from 'vue'
 import { useRecordStore, useUserStore } from '../store'
 import { storeToRefs } from 'pinia'
-import { filterRecord, User } from '..'
+import { filterRecord, Record, User } from '..'
+import { DataTableColumns, NA, NTag, NText } from 'naive-ui'
 
 // store
 const userStore = useUserStore()
@@ -10,10 +11,16 @@ const { users } = storeToRefs(userStore)
 const recordStore = useRecordStore()
 const { records } = storeToRefs(recordStore)
 
+const loading = computed(() => {
+  return users.value.length === 0 || records.value.length === 0
+})
+
+// 自动填充
 const searchUserValue = ref('')
+const searchUserSW = ref('')
 const options = ref<{ label: string; value: string }[]>([])
 
-function updateUser(value: string) {
+function updateEdit(value: string) {
   options.value = users.value
     .filter(
       (item: User) =>
@@ -22,50 +29,24 @@ function updateUser(value: string) {
         (item.nickname && item.nickname.includes(value))
     )
     .map((item: User) => {
-      const userEmojis = ['👨‍🌾', '👩‍🌾', '👨‍🔧', '👩‍🔧', '👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓']
-      const userEmoji =
-        userEmojis[Math.floor(Math.random() * userEmojis.length)]
-      const showValue =
-        '#' +
-        item.sw +
-        '@' +
-        item.username +
-        (item.nickname ? userEmoji + item.nickname : '')
+      const showname =
+        item.username + (item.nickname ? '🆔' + item.nickname : '')
+      searchUserSW.value = item.sw
       return {
-        label: showValue,
-        value: showValue
+        label: showname,
+        value: item.sw
       }
     })
 }
 
-const filterRecords = ref<filterRecord[]>([])
-function selectUser(value: string) {
-  const newRecords = records.value
-    .filter(item => {
-      return item.data.find(i => value.includes(i.sw))
-    })
-    .map(item => {
-      const { sw, bonus } = item.data.find(i => value.includes(i.sw))!
-      const index = item.data.findIndex(i => i.sw === sw)
-      return {
-        datetime: item.datetime,
-        data: item.data,
-        sw,
-        rank: index + 1,
-        bonus
-      }
-    })
-    .sort((a, b) => {
-      return new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
-    })
-  filterRecords.value = newRecords
-}
+// 数据
 
-const loading = computed(() => {
-  return users.value.length === 0 || records.value.length === 0
-})
-
-const showList = (bonus: number) => {
+const showList = (
+  bonus: number
+): {
+  type?: 'error' | 'warning' | 'info' | 'success' | 'default'
+  text?: string
+} => {
   switch (bonus) {
     case 4:
       return { type: 'error', text: '🥇+4' }
@@ -84,7 +65,7 @@ const showList = (bonus: number) => {
       break
 
     case 1:
-      return { type: 'default', text: '🥇+1' }
+      return { type: 'default', text: '🍄+1' }
       break
 
     default:
@@ -92,47 +73,145 @@ const showList = (bonus: number) => {
       break
   }
 }
+
+function createColumns({
+  openRecordModal
+}: {
+  openRecordModal: (row: filterRecord) => void
+}): DataTableColumns<filterRecord> {
+  return [
+    {
+      title: '排名',
+      key: 'rank',
+      render(row) {
+        return h(
+          NA,
+          {
+            href: 'javascript:;',
+            onClick: () => openRecordModal(row)
+          },
+          {
+            default: () => '#' + row.rank
+          }
+        )
+      }
+    },
+    {
+      title: '追加得分',
+      key: 'bonus',
+      render(row) {
+        return h(
+          NText,
+          {},
+          {
+            default: () => {
+              return row.bonus !== 0
+                ? h(
+                    NTag,
+                    {
+                      size: 'small',
+                      type: showList(row.bonus).type
+                    },
+                    {
+                      default: () => showList(row.bonus).text
+                    }
+                  )
+                : ''
+            }
+          }
+        )
+      }
+    },
+    { title: '时间', key: 'datetime' }
+  ]
+}
+
+const columns = createColumns({
+  openRecordModal(row: Record) {
+    showModal.value = true
+    showModalData.value = row.data
+  }
+})
+const filterRecordsData = ref<filterRecord[]>([])
+function selectEdit(value: string) {
+  const newRecords = records.value
+    .filter(item => {
+      return item.data.find(i => value.includes(i.sw))
+    })
+    .map(item => {
+      const { sw, score, bonus } = item.data.find(i => value.includes(i.sw))!
+      const rank = item.data.findIndex(i => i.sw === sw) + 1
+      return {
+        sw,
+        rank,
+        score,
+        bonus,
+        ...item
+      }
+    })
+    .sort((a, b) => {
+      return new Date(b.datetime).getTime() - new Date(a.datetime).getTime()
+    })
+  filterRecordsData.value = newRecords
+}
+
+const showModal = ref(false)
+const showModalData = ref<{ sw: string; score: number; bonus: number }[]>([])
 </script>
 
 <template>
-  敬请期待
-  <n-spin :show="loading" v-if="false">
-    <n-space vertical>
-      <n-p>可以通过输入SW码、游戏名称、昵称来查询。</n-p>
-      <n-auto-complete
-        v-model:value="searchUserValue"
-        :input-props="{
-          autocomplete: 'disabled'
-        }"
-        :options="options"
-        placeholder="例：“小白”"
-        clearable
-        @update:value="updateUser"
-        @select="selectUser"
-      />
+  <n-space vertical>
+    <n-alert title="注意" type="warning">
+      以下数据并非实际比赛数据，仅为测试数据
+    </n-alert>
+    <n-p>可以通过输入好友编号、游戏名称、昵称来查询。</n-p>
+    <n-auto-complete
+      v-model:value="searchUserValue"
+      :input-props="{
+        autocomplete: 'disabled'
+      }"
+      :options="options"
+      placeholder="例：“小白”"
+      clearable
+      @update:value="updateEdit"
+      @select="selectEdit"
+    />
+    <n-data-table
+      :columns="columns"
+      :data="filterRecordsData"
+      :loading="loading"
+    />
+  </n-space>
 
-      <n-table :bordered="false">
-        <thead>
-          <tr>
-            <th>排名</th>
-            <th>追加得分</th>
-            <th>比赛时间</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in filterRecords">
-            <td>
-              {{ item.rank }}
-            </td>
-            <td>
-              <n-tag :bordered="false" :type="showList(item.bonus).type">
-                {{ showList(item.bonus).text }}
-              </n-tag>
-            </td>
-            <td>2024-05-25 21:09</td>
-          </tr>
-        </tbody>
-      </n-table>
-    </n-space>
-  </n-spin>
+  <n-modal
+    style="width: 90%; max-width: 750px"
+    v-model:show="showModal"
+    preset="card"
+    title="对局详情"
+    :bordered="false"
+    :auto-focus="false"
+  >
+    <n-list bordered>
+      <n-list-item v-for="item in showModalData">
+        <n-space justify="space-between" align="center">
+          <n-text>
+            {{ users.find(i => i.sw === item.sw)?.showname }}
+          </n-text>
+          <n-text>
+            <n-tag
+              v-if="item.sw === searchUserSW && item.bonus"
+              :bordered="false"
+              size="small"
+              :type="showList(item.bonus).type"
+            >
+              {{ showList(item.bonus).text }}
+            </n-tag>
+            {{ item.score }}
+          </n-text>
+        </n-space>
+      </n-list-item>
+    </n-list>
+  </n-modal>
 </template>
+
+<style></style>

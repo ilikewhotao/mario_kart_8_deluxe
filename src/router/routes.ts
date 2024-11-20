@@ -15,19 +15,19 @@ const routes = [
     path: '/user',
     name: 'user',
     component: UserView,
-    meta: { title: '参赛名单', icon: '📝' }
+    meta: { title: '参赛名单', icon: '🎟' }
   },
   {
     path: '/record',
     name: 'record',
     component: RecordView,
-    meta: { title: '对战记录', icon: '📃' }
+    meta: { title: '全部记录', icon: '📃' }
   },
   {
     path: '/find',
     name: 'find',
     component: FindView,
-    meta: { title: '分数查询', icon: '💯' }
+    meta: { title: '记录查询', icon: '💯' }
   }
 ]
 

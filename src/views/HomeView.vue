@@ -7,7 +7,7 @@
     </n-a>
   </n-alert>
   <n-h3 prefix="bar"> 活动报名 </n-h3>
-  <n-p> 需要玩家提供SW码以及游戏名称。（活动期间尽量不要修改游戏名称） </n-p>
+  <n-p> 需要玩家提供好友编号、游戏名称。（活动期间尽量不要修改游戏名称） </n-p>
 
   <n-divider />
   <n-h3 prefix="bar"> 活动时间 </n-h3>
@@ -41,23 +41,24 @@
     <n-li> 有效对局每人基础分 +1 </n-li>
     <n-li>
       单场排名第1追加
-      <n-tag :bordered="false" type="error"> 🥇+4 </n-tag> 金牌分
+      <n-tag :bordered="false" type="error" size="small"> 🥇+4 </n-tag> 金牌分
     </n-li>
     <n-li>
       单场排名第2追加
-      <n-tag :bordered="false" type="warning"> 🥈+3 </n-tag> 银牌分
+      <n-tag :bordered="false" type="warning" size="small"> 🥈+3 </n-tag> 银牌分
     </n-li>
     <n-li>
       单场排名第3追加
-      <n-tag :bordered="false" type="info"> 🥉+2 </n-tag> 铜牌分
+      <n-tag :bordered="false" type="info" size="small"> 🥉+2 </n-tag> 铜牌分
     </n-li>
     <n-li>
       单场排名第4-9追加
-      <n-tag :bordered="false" type="success"> 🍀+6 </n-tag> 随机幸运分
+      <n-tag :bordered="false" type="success" size="small"> 🍀+6 </n-tag>
+      随机幸运分
     </n-li>
     <n-li>
       单场排名第10-12追加
-      <n-tag :bordered="false" type="default"> 🍄+1 </n-tag> 鼓励分
+      <n-tag :bordered="false" type="default" size="small"> 🍄+1 </n-tag> 鼓励分
     </n-li>
   </n-ul>
   <n-p>
@@ -75,6 +76,8 @@
     <n-li> 累计得分第4-10名 💰10元 </n-li>
   </n-ul>
   <n-p>
-    * 第1名可额外获得由 <n-text type="success"> 汐岚 </n-text> 独家赞助刻有自定义字符或图案的3D打印手办一个
+    * 第1名可额外获得由
+    <n-text type="success"> 汐岚 </n-text>
+    独家赞助刻有自定义字符或图案的3D打印手办一个
   </n-p>
 </template>

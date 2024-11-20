@@ -2,7 +2,7 @@ export type User = {
   sw: string
   username: string
   nickname: string
-  showname?: string
+  showname: string
 }
 
 export type Record = {
@@ -13,5 +13,6 @@ export type Record = {
 export type filterRecord = Record & {
   sw: string
   rank: number
+  score: number
   bonus: number
 }
