@@ -68,7 +68,9 @@ const recordsData = computed(() => {
 })
 
 const showModal = ref(false)
-const showModalData = ref<{ sw: string; score: number; bonus: number }[]>([])
+const showModalData = ref<
+  { sw: string; rank: number; score: number; bonus: number }[]
+>([])
 const showList = (
   bonus: number
 ): {
@@ -105,9 +107,6 @@ const showList = (
 
 <template>
   <n-space vertical>
-    <n-alert title="注意" type="warning">
-      以下数据并非实际比赛数据，仅为测试数据
-    </n-alert>
     <n-space align="center">
       <n-h4 class="m-0"> 记录总数 </n-h4>
       <n-h1 class="m-0">
@@ -128,20 +127,27 @@ const showList = (
     <n-list bordered>
       <n-list-item v-for="item in showModalData">
         <n-space justify="space-between" align="center">
-          <n-text>
-            {{ users.find(i => i.sw === item.sw)?.showname }}
-          </n-text>
-          <n-text>
+          <n-space>
+            <div style="width: 32px">#{{ item.rank }}</div>
+            <n-text>
+              {{ users.find(i => i.sw === item.sw)?.username }}
+            </n-text>
+          </n-space>
+          <n-space>
             <n-tag
-              v-if="item.bonus === 6"
+              v-if="item.bonus"
               :bordered="false"
               size="small"
               :type="showList(item.bonus).type"
             >
               {{ showList(item.bonus).text }}
             </n-tag>
-            {{ item.score }}
-          </n-text>
+            <div style="width: 20px">
+              <n-text>
+                {{ item.score }}
+              </n-text>
+            </div>
+          </n-space>
         </n-space>
       </n-list-item>
     </n-list>

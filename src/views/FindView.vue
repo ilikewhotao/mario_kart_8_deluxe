@@ -140,8 +140,9 @@ function selectEdit(value: string) {
       return item.data.find(i => value.includes(i.sw))
     })
     .map(item => {
-      const { sw, score, bonus } = item.data.find(i => value.includes(i.sw))!
-      const rank = item.data.findIndex(i => i.sw === sw) + 1
+      const { sw, rank, score, bonus } = item.data.find(i =>
+        value.includes(i.sw)
+      )!
       return {
         sw,
         rank,
@@ -157,14 +158,13 @@ function selectEdit(value: string) {
 }
 
 const showModal = ref(false)
-const showModalData = ref<{ sw: string; score: number; bonus: number }[]>([])
+const showModalData = ref<
+  { sw: string; rank: number; score: number; bonus: number }[]
+>([])
 </script>
 
 <template>
   <n-space vertical>
-    <n-alert title="注意" type="warning">
-      以下数据并非实际比赛数据，仅为测试数据
-    </n-alert>
     <n-p>可以通过输入好友编号、游戏名称、昵称来查询。</n-p>
     <n-auto-complete
       v-model:value="searchUserValue"
@@ -177,6 +177,12 @@ const showModalData = ref<{ sw: string; score: number; bonus: number }[]>([])
       @update:value="updateEdit"
       @select="selectEdit"
     />
+    <n-p>
+      总分：{{
+        filterRecordsData.length +
+          filterRecordsData.reduce((t, i) => t + i.bonus, 0) || '--'
+      }}
+    </n-p>
     <n-data-table
       :columns="columns"
       :data="filterRecordsData"
@@ -193,22 +199,40 @@ const showModalData = ref<{ sw: string; score: number; bonus: number }[]>([])
     :auto-focus="false"
   >
     <n-list bordered>
-      <n-list-item v-for="item in showModalData">
+      <n-list-item
+        v-for="item in showModalData"
+        :style="
+          item.sw === searchUserSW
+            ? 'background-color: rgba(24, 160, 88, 0.16)'
+            : ''
+        "
+      >
         <n-space justify="space-between" align="center">
-          <n-text>
-            {{ users.find(i => i.sw === item.sw)?.showname }}
-          </n-text>
-          <n-text>
+          <n-space>
+            <div style="width: 32px">
+              <n-text :depth="item.sw === searchUserSW ? undefined : 3">
+                #{{ item.rank }}
+              </n-text>
+            </div>
+            <n-text :depth="item.sw === searchUserSW ? undefined : 3">
+              {{ users.find(i => i.sw === item.sw)?.username }}
+            </n-text>
+          </n-space>
+          <n-space>
             <n-tag
-              v-if="item.sw === searchUserSW && item.bonus"
+              v-if="item.bonus"
               :bordered="false"
               size="small"
               :type="showList(item.bonus).type"
             >
               {{ showList(item.bonus).text }}
             </n-tag>
-            {{ item.score }}
-          </n-text>
+            <div style="width: 20px">
+              <n-text :depth="item.sw === searchUserSW ? undefined : 3">
+                {{ item.score }}
+              </n-text>
+            </div>
+          </n-space>
         </n-space>
       </n-list-item>
     </n-list>
