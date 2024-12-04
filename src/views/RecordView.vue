@@ -33,9 +33,10 @@ function createColumns({
           },
           {
             default: () =>
-              users.value.find(
-                e => e.sw === row.data.find(i => i.bonus === 6)?.sw
-              )?.username || '🈚️'
+              row.data
+                .filter(item => item.bonus === 6)
+                .map(item => users.value.find(i => i.sw === item.sw)?.username)
+                .join(' & ') || '🈚️'
           }
         )
       }
