@@ -156,6 +156,13 @@ function selectEdit(value: string) {
     })
   filterRecordsData.value = newRecords
 }
+const showScores = computed(() => {
+  const length = filterRecordsData.value.length
+  const scores =
+    length + filterRecordsData.value.reduce((t, i) => t + i.bonus, 0)
+
+  return scores + '分/' + length + '场'
+})
 
 const showModal = ref(false)
 const showModalData = ref<
@@ -177,12 +184,7 @@ const showModalData = ref<
       @update:value="updateEdit"
       @select="selectEdit"
     />
-    <n-p>
-      总分：{{
-        filterRecordsData.length +
-          filterRecordsData.reduce((t, i) => t + i.bonus, 0) || '--'
-      }}
-    </n-p>
+    <n-p> 总分：{{ showScores }} </n-p>
     <n-data-table
       :columns="columns"
       :data="filterRecordsData"

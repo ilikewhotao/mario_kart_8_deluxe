@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import UserView from '../views/UserView.vue'
 import RecordView from '../views/RecordView.vue'
 import FindView from '../views/FindView.vue'
+import ResultView from '../views/ResultView.vue'
 
 // const _import = (path: string) =>
 //   defineAsyncComponent(() => import(`../views/${path}.vue`))
@@ -33,6 +34,12 @@ const routes = [
     name: 'find',
     component: FindView,
     meta: { title: '记录查询', icon: '💯' }
+  },
+  {
+    path: '/result',
+    name: 'result',
+    component: ResultView,
+    meta: { title: '结果公示', icon: '🏆' }
   }
 ]
 
