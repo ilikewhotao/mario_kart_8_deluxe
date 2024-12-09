@@ -16,3 +16,18 @@ export type filterRecord = Record & {
   score: number
   bonus: number
 }
+
+export type filterResultType = {
+  data: {
+    sw: string
+    rank: number
+    score: number
+    bonus: number
+    datetime: string
+  }[]
+  scores: number
+  sw: string
+  username: string
+  nickname: string
+  showname: string
+}
