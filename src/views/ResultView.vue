@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { computed, h, ref } from 'vue'
 import { useRecordStore, useUserStore } from '../store'
-import { DataTableColumns, NA } from 'naive-ui'
+import { DataTableColumns, DataTableInst, NA } from 'naive-ui'
 import { filterResultType, Record } from '..'
 
 // store
@@ -162,6 +162,10 @@ const showList = (
   }
 }
 
+const tableRef = ref<DataTableInst>()
+const downloadCsv = () =>
+  tableRef.value?.downloadCsv({ fileName: '马力欧卡丁车-小白杯' })
+
 const showModal = ref(false)
 const showModalData = ref<
   { sw: string; rank: number; score: number; bonus: number; datetime: string }[]
@@ -174,10 +178,11 @@ randResult()
   <n-space vertical :size="12">
     <n-space>
       <n-button type="primary" @click="randResult"> 重新模拟 </n-button>
-      <n-button type="info" @click=""> 导出结果 </n-button>
+      <n-button type="info" @click="downloadCsv"> 导出结果 </n-button>
     </n-space>
     <n-p> 以下结果为模拟结果，不代表最终结果： </n-p>
     <n-data-table
+      ref="tableRef"
       :columns="columns"
       :data="filterResultData"
       :loading="loading"
